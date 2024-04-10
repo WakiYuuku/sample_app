@@ -1,0 +1,7 @@
+MethodLength:
+  CountComments: true
+  Max: 20
+Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
