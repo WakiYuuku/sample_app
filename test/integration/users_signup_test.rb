@@ -30,5 +30,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     follow_redirect!
     #showに飛ばされるはず
     assert_template 'users/show'
+    #flashのテスト
+    assert_not flash.empty?
   end
 end
