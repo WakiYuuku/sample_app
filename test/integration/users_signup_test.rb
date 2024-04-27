@@ -26,6 +26,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                 password:              "password",
                                 password_confirmation: "password" } }
     end
+
     #指定されたリダイレクト先に飛ぶ
     follow_redirect!
     #showに飛ばされるはず

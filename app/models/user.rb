@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  
   attr_accessor :remember_token #記憶トークンを安全に使用する
 
   before_save { email.downcase! }
@@ -8,7 +9,7 @@ class User < ApplicationRecord
                     format: {with: VALID_EMAIL_REGEX},
                     uniqueness: true
   has_secure_password
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   
   #特異メソッドの定義
   class << self
@@ -32,6 +33,12 @@ class User < ApplicationRecord
     remember_digest
   end
 
+  # セッションハイジャック防止のためにセッショントークンを返す
+  # この記憶ダイジェストを再利用しているのは単に利便性のため
+  def session_token
+    remember_digest || remember
+  end
+
   # 渡されたトークンがダイジェストと一致したらtrueを返す
   def authenticated?(remember_token)
     #記憶トークンがnilだと例外処理が起こってしまうので、それを防ぐ
@@ -50,4 +57,5 @@ class User < ApplicationRecord
   def session_token
     remember_digest || remember
   end
+
 end

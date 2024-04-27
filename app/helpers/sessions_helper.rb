@@ -18,7 +18,7 @@ module SessionsHelper
         #セッションにユーザーIDが存在すれば
         if (user_id = session[:user_id])
             user = User.find_by(id: user_id)
-            if user && session[:session_token] == user.session_token
+            if user && session[:session_token] == user.session_token #セッションリプレイ攻撃対策
                 @current_user = user
             end
 
@@ -29,6 +29,11 @@ module SessionsHelper
                 @current_user = user
             end
         end
+    end
+
+    #わたされたユーザーがカレントユーザーであればtrueを返す
+    def current_user?(user)
+        user && user == current_user
     end
 
     #ユーザーがログインしていればTrue、その他ならFalse
@@ -48,5 +53,10 @@ module SessionsHelper
         forget(current_user)
         reset_session
         @current_user = nil #安全のため
+    end
+
+    #アクセスしようとしたURLを保存する
+    def store_location
+        session[:forwarding_url] = request.original_url if request.get? #getリクエストのみ保存
     end
 end
