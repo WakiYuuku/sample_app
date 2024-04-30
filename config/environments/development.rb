@@ -87,5 +87,5 @@ Rails.application.configure do
   #host = "127.0.0.1:3000/" # ここをコピペすると失敗します。自分の環境のホストに変えてください。
   host = "sample-app-7f16.onrender.com/"
   # localhostで開発している場合は以下をお使いください
-  config.action_mailer.default_url_options = { host: host, protocol: 'http' , port: 3000} #ポートを指定しないと省略されちゃう
+  config.action_mailer.default_url_options = { host: host, protocol: 'http' , port: 7f16} #ポートを指定しないと省略されちゃう
 end
