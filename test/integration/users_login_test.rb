@@ -4,8 +4,7 @@
 
 require "test_helper"
 
-class UsersLogin < ActionDispatch::IntegrationTest
-
+class UsersLogin < ActionDispatch::IntegrationTest #Testで終わらないクラスは明示的に実行しない限り実行されない
   def setup
     @user = users(:michael) #fixtureからログイン可能なユーザー情報を取得
   end

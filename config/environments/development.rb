@@ -81,4 +81,10 @@ Rails.application.configure do
   config.hosts << pf_host
 
   config.action_cable.allowed_request_origins = ["https://#{pf_host}"]
+
+  config.action_mailer.raise_delivery_errors = false
+
+  host = "127.0.0.1:3000/" # ここをコピペすると失敗します。自分の環境のホストに変えてください。
+  # localhostで開発している場合は以下をお使いください
+  config.action_mailer.default_url_options = { host: host, protocol: 'http' , port: 3000} #ポートを指定しないと省略されちゃう
 end

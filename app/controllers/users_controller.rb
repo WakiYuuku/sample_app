@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :correct_user, only: [:edit, :update] #たのユーザーの情報をいじれないようにする
   before_action :admin_user, only: :destroy
   def index
-    @users = User.paginate(page: params[:page]) #pagenationを行う
+    @users = User.where(activated: true).paginate(page: params[:page]) #pagenationを行う,有効なユーザーのみを表示したい。
   end
   def new
     #インスタンスを作成してるのか
@@ -12,6 +12,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    redirect_to root_url and return unless @user.activated? #有効でないユーザーには表示しない。
     #debugger
   end
 
@@ -19,11 +20,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save 
       #保存が成功した場合
-      #ログインも一緒に行う
-      reset_session
-      log_in @user
-      flash[:success] = "Wlecom to the Sample App!"
-      redirect_to @user
+      @user.send_activation_email #メソッドによって有効化メールを送信する
+      flash[:info] = "Please check your email to activate your account"
+      redirect_to root_url
     else
       render 'new', status: :unprocessable_entity
     end
