@@ -93,13 +93,13 @@ Rails.application.configure do
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'YukuWaki.onrender.com'
+  host = 'sample_app.onrender.com'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
     :port           => 587,
     :address        => 'smtp.mailgun.org',
-    :user_name      => ENV['postmaster@sandbox16d76128ed2c479e999ee5afb7e09cb0.mailgun.org'],
-    :password       => ENV['MAILGUN_SMTP_PAS6b85ea97e0af754da30d554b06e6dae3-86220e6a-9291a235SWORD'],
+    :user_name      => ENV['MAILGUN_SMTP_LOGIN'],
+    :password       => ENV['MAILGUN_SMTP_PASSWORD'],
     :domain         => host,
     :authentication => :plain,
   }
