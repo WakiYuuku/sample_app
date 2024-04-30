@@ -23,7 +23,7 @@ User.create!(name:  "Example User",
                email: email,
                password:              password,
                password_confirmation: password,
-               activated: ture,
+               activated: true,
                activated_at: Time.zone.now
                )
 end
