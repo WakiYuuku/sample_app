@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   
-  attr_accessor :remember_token ,:activation_token#記憶トークンを安全に使用する
+  attr_accessor :remember_token ,:activation_token, :reset_token  #記憶トークンを安全に使用する
   before_save   :downcase_email #コールバック
   before_create :create_activation_digest
 
@@ -42,7 +42,7 @@ class User < ApplicationRecord
 
   # 渡されたトークンがダイジェストと一致したらtrueを返す
   def authenticated?(attribute, token)
-    digest = send("#{attribute}_digest")
+    digest = send("#{attribute}_digest") #self.が省略されてる
     #記憶トークンがnilだと例外処理が起こってしまうので、それを防ぐ
     return false if digest.nil?
     #Userインスタンスの持つ記憶トークンと比較している
@@ -54,12 +54,6 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
 
-  #セッションハイジャック防止のためにセッショントークンを返す
-  #この記憶ダイジェストを再利用しているのは単に利便性のため
-  def session_token
-    remember_digest || remember
-  end
-
   #アカウントを有効にする
   def activate 
     update_columns(activated: true, activated_at: Time.zone.now) #validationが行われないため注意
@@ -69,6 +63,24 @@ class User < ApplicationRecord
   #有効化用のメールを送信する
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
+  end
+
+  # パスワード再設定の属性を設定する
+  def create_reset_digest
+    self.reset_token = User.new_token
+    #update_attribute(:reset_digest,  User.digest(reset_token))
+    #update_attribute(:reset_sent_at, Time.zone.now)
+    update_columns(reset_digest: User.digest(reset_token), reset_sent_at: Time.zone.now)
+  end
+
+  # パスワード再設定のメールを送信する
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  # パスワード再設定の期限が切れている場合はtrueを返す
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
   end
 
   private
@@ -83,4 +95,6 @@ class User < ApplicationRecord
       self.activation_digest = User.digest(activation_token) #ダイジェストの作成
     end
 
+
+    
 end
